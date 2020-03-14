@@ -5,4 +5,6 @@
     <string name="email">Email</string>
     <string name="name">Name</string>
     <string name="logo_image">logo image</string>
+    <string name="register">Register</string>
+    <string name="empty_field">Empty Field</string>
 </resources>
