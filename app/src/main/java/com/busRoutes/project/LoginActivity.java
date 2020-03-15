@@ -1,5 +1,6 @@
 package com.busRoutes.project;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -81,7 +82,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         PreferenceUtils utils = new PreferenceUtils(getApplicationContext());
 
         if(utils.getEmail() != null){
-            //if the user already logged in go to main activity
+            Intent intent = new Intent(LoginActivity.this,UserActivity.class);
+            startActivity(intent);
+            finish();
         }else{
 
         }
@@ -140,9 +143,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 //preferences and start main activity
                 preferenceUtils.saveEmail(user.getEmail());
-
-
-
+                Intent intent = new Intent(LoginActivity.this,UserActivity.class);
+                startActivity(intent);
+                finish();
             }
 
             @Override
