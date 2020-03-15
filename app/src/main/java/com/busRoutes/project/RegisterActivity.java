@@ -2,21 +2,24 @@ package com.busRoutes.project;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.busRoutes.project.APIService.ApiInterface;
 import com.busRoutes.project.APIService.RetrofitSingleton;
+import com.busRoutes.project.model.ErrorResponse;
 import com.busRoutes.project.model.Response;
 import com.busRoutes.project.model.User;
 import com.busRoutes.project.utils.Constants;
 import com.busRoutes.project.utils.Validations;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout mEmailTextInputLayout;
     private TextInputLayout mPasswordTextInputLayout;
 
+    private TextView mLoginTextView;
     private Button mRegisterButton;
 
     private ProgressBar mProgressBar;
@@ -63,6 +67,17 @@ public class RegisterActivity extends AppCompatActivity {
                 register();
             }
         });
+        mLoginTextView = findViewById(R.id.text_view_login);
+        mLoginTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
 
     }
 
@@ -95,20 +110,12 @@ public class RegisterActivity extends AppCompatActivity {
             mProgressBar.setVisibility(View.VISIBLE);
             registerUser(user);
         }else{
-            //implement showing a dialog
+
         }
 
-//        User user = new User("Francisco", "franciscodorsethotmail.com","123456880");
-//        registerUser(user);
-
 
     }
 
-    private void setError(){
-        mNameTextInputLayout.setError(null);
-        mEmailTextInputLayout.setError(null);
-        mPasswordTextInputLayout.setError(null);
-    }
 
     private void registerUser(User user){
         Retrofit retrofit = RetrofitSingleton.getRetrofit(Constants.BASE_URL); //get retrofit
@@ -120,23 +127,32 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                 if(!response.isSuccessful()){
+                    Gson gson = new Gson();
+                    ErrorResponse errorResponse = gson.fromJson(response.errorBody().charStream(),ErrorResponse.class);
+                    Toast.makeText(RegisterActivity.this,errorResponse.getMessage(),Toast.LENGTH_LONG).show();
+                    mProgressBar.setVisibility(View.GONE);
                     return;
                 }
-                //go to login
-                login();
+                String userId = response.body().getUser();
+                login(userId);
             }
 
             @Override
             public void onFailure(Call<Response> call, Throwable t) {
-
+                Toast.makeText(RegisterActivity.this,t.getMessage(),Toast.LENGTH_LONG);
             }
         });
 
-
     }
 
-    private void login()
+    private void login(String userId)
     {
         mProgressBar.setVisibility(View.GONE);
+    }
+
+    private void setError(){
+        mNameTextInputLayout.setError(null);
+        mEmailTextInputLayout.setError(null);
+        mPasswordTextInputLayout.setError(null);
     }
 }

@@ -7,4 +7,6 @@
     <string name="logo_image">logo image</string>
     <string name="register">Register</string>
     <string name="empty_field">Empty Field</string>
+    <string name="login">Login</string>
+    <string name="not_registered">Not Registered? Register now!</string>
 </resources>
