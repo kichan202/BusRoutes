@@ -148,6 +148,9 @@ public class RegisterActivity extends AppCompatActivity {
     private void login(String userId)
     {
         mProgressBar.setVisibility(View.GONE);
+        Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void setError(){
